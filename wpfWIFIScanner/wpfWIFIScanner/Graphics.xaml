@@ -5,7 +5,6 @@
         Title="WiFi Signal Monitoring" Height="300" Width="500">
     <Window.Resources>
         <!-- Стиль для OxyPlot -->
-        <!-- Стиль для OxyPlot -->
         <Style x:Key="CoolPlotStyle" TargetType="oxy:PlotView">
             <Setter Property="Background" Value="LightGray" />
         </Style>
