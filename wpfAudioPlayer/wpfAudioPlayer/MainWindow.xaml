@@ -1,0 +1,192 @@
+﻿<Window x:Class="wpfAudioPlayer.AudioPlayerViewModel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework"
+        mc:Ignorable="d"
+        Height="500" Width="800" Background="Transparent"
+        AllowsTransparency="True" WindowStartupLocation="CenterScreen" WindowStyle="None">
+
+
+    <Border Style="{DynamicResource BgColor}" CornerRadius="40" MouseDown="Border_MouseDown">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <!--Кнопка закрытия окна-->
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" Background="Transparent" >
+                <Button HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Click="Info_Click" Width="40" Height="40"
+                        Grid.Row="0" Grid.Column="2" Style="{DynamicResource exitButton}" Margin="10 10 0 20">
+                    <Icon:PackIconMaterial Kind="AccountQuestion" Width="25" Height="25" Style="{DynamicResource exitButtonIcon}" Margin="10 0 0 0"/>
+                </Button>
+                <Button HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Click="CloseWindow_Click" 
+                        Grid.Row="0" Grid.Column="2" Style="{DynamicResource exitButton}" Margin="55 10 0 20">
+                    <Icon:PackIconMaterial Kind="Close"  Style="{DynamicResource exitButtonIcon}" Margin="12 0 0 0"/>
+                </Button>
+            </StackPanel>
+           
+            <!--Смена темы-->
+            <ToggleButton x:Name="ToggleThemeButton"
+                          Content="Тема: Светлая"
+                          Width="45" Height="25"
+                          Checked="ToggleButton_Checked"
+                          Unchecked="ToggleButton_Unchecked"
+                          Grid.Column="0" Grid.Row="0"/>
+
+            <!--Меню-->
+            <Border Background="Transparent" CornerRadius="40 0 0 40" Grid.Row="1" Grid.RowSpan="2">
+                <StackPanel Margin="0 70 0 0"> 
+                    
+                    <!--Кнопки-->
+                    <Button Style="{DynamicResource menuButton}" Click="BT_Click_OpenPlaylist">
+                        <Grid>
+                            <TextBlock Text="Плейлист"/>
+                            <Icon:PackIconMaterial Style="{DynamicResource menuButtonIcon}" Margin="0,0,10,0"/>
+                        </Grid>
+                        
+                    </Button>
+
+                    <Button Style="{DynamicResource menuButton}"  Click="BT_Click_Open">
+                        <Grid>
+                            <TextBlock Text="Трек"/>
+                            <Icon:PackIconMaterial Style="{DynamicResource menuButtonIcon}"/>
+                        </Grid>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!--Правые кнопки-->
+
+            <Border Background="Transparent" CornerRadius="0 40 40 0" Grid.Row="1" Grid.RowSpan="3" Grid.Column="2">
+                <StackPanel Margin="0 70 0 0">
+
+                    <!--Кнопки-->
+
+                    <Button Style="{DynamicResource menuButton}" Click="BT_Click_CreatePlaylist" Margin="0 0 0 0">
+                        <Grid>
+                            <TextBlock Text="Создать" Margin="10 0 20 20"/>
+                            <TextBlock Text="плейлист" Margin="10 20 0 0"/>
+                            <Icon:PackIconMaterial Style="{DynamicResource menuButtonIcon}" Margin="20,0,0,0"/>
+                        </Grid>
+                    </Button>
+
+                    <Button Style="{DynamicResource menuButton}"  Click="BT_Click_AddTrack" Margin="0 0 0 0">
+                        <Grid>
+                            <TextBlock Text="Добавить" Margin="10 0 20 20"/>
+                            <TextBlock Text="трек" Margin="10 20 0 0"/>
+                            <Icon:PackIconMaterial Style="{DynamicResource menuButtonIcon}" Margin="10,0,0,0"/>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource menuButton}"  Click="BT_Click_ExportPlaylist" Margin="0 0 0 0">
+                        <Grid>
+                            <TextBlock Text="Выгрузить" Margin="10 0 20 20"/>
+                            <TextBlock Text="плейлист" Margin="10 20 0 0"/>
+                            <Icon:PackIconMaterial Style="{DynamicResource menuButtonIcon}" Margin="10,0,0,0"/>
+                        </Grid>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Плейлист -->
+            <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" CornerRadius="0 0 40 40" Margin="0 0 0 20"
+                    Style="{DynamicResource ThemeSwitchBgColor}">
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock x:Name="Playlist_name" Text="Playlist Name" Margin="30 30 0 0" Style="{DynamicResource PlaylistTitle}"/>
+                    <ListBox x:Name="PlaylistBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                             Background="Transparent" DockPanel.Dock="Left" Margin="30 10 30 30" Height="280"
+                             BorderThickness="0" Style="{DynamicResource PlaylistTracks}"  PreviewMouseDown="PlaylistBox_MouseDown"
+                             IsSynchronizedWithCurrentItem="True" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Переместить вверх" Click="TrackUp_Click" />
+                                <MenuItem Header="Удалить трек" Click="RemoveTrack_Click" />
+                                <MenuItem Header="Переместить вниз" Click="TrackDown_Click" />
+                                <!--<MenuItem Header="Информация о треке" Click="TrackInfo_Click" />-->
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+            
+            <!--Плеер-->
+            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{DynamicResource ThemeSwitchBgColor}"  CornerRadius="40 40 0 0" Margin="40 0 40 0">
+                <StackPanel Orientation="Horizontal">
+
+                    <Ellipse Width="60" Height="56" Margin="20 0 0 0">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="C:\Users\GAbdu\source\repos\DevApp\wpfAudioPlayer\wpfAudioPlayer\In-Yan.png"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <Border Background="Transparent" Width="110" Height="35" BorderThickness="0" Margin="10 0 0 0">
+                        <Canvas ClipToBounds="True">
+                            <TextBlock x:Name="TBFileName" Text="Название" 
+                                       Foreground="White" FontSize="22" 
+                                       FontWeight="Bold">
+                                <TextBlock.RenderTransform>
+                                    <TranslateTransform x:Name="MarqueeTransform" />
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
+                        </Canvas>
+                    </Border>
+                    <Button  Style="{DynamicResource playerButton}" Click="BT_Click_Previous">
+                        <Icon:PackIconMaterial Kind="SkipPrevious" Style="{DynamicResource playerButtonIcon}"/>
+                    </Button>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="pauseBtn" Style="{DynamicResource playerButton}" Click="BT_Click_Pause" Visibility="Hidden">
+                            <Icon:PackIconMaterial Kind="Pause" Style="{DynamicResource playerButtonIcon}"/>
+                        </Button>
+                        <Button x:Name="playBtn" Style="{DynamicResource playerButton}" Click="BT_Click_Play" Visibility="Visible" Margin="-45 0 0 0">
+                            <Icon:PackIconMaterial Kind="Play" Style="{DynamicResource playerButtonIcon}"/>
+                        </Button>
+                    </StackPanel>
+
+                    <Button Style="{DynamicResource playerButton}" Click="BT_Click_Next">
+                        <Icon:PackIconMaterial Kind="SkipNext" Style="{DynamicResource playerButtonIcon}"/>
+                    </Button>
+                    
+                    <Slider Style="{DynamicResource SliderStyle1}" x:Name="TrackSlider" IsSelectionRangeEnabled="True" 
+                            VerticalAlignment="Center" Value="0" Width="275" 
+                            SelectionEnd="{Binding ElementName=slider, Path=Value}" 
+                            IsSnapToTickEnabled="True" ValueChanged="TrackSlider_Changed" Maximum="100" TickFrequency="1"  
+                            IsMoveToPointEnabled="True"/>
+
+                    <TextBlock x:Name="TimerText" Text="0:00" VerticalAlignment="Center" Style="{DynamicResource Timer}"/>
+                    
+                    <StackPanel Margin="5 0 0 0">
+                        <Button Style="{DynamicResource playerButton}" Margin="0 20 0 0" Click="BT_Click_Volume">
+                            <Icon:PackIconMaterial Kind="VolumeMedium" Style="{DynamicResource playerButtonIcon}" Margin="0 0 0 6"/>
+                        </Button>
+                        <Popup x:Name="VolumePopup" Placement="Top" PlacementTarget="{Binding ElementName=VolumeButton}" AllowsTransparency="True">
+                            <StackPanel VerticalAlignment="Bottom" Background="Transparent">
+                                <!-- Вертикальный слайдер для регулировки звука -->
+                                <Slider x:Name="VolumeSlider" ValueChanged="VolumeSlider_Changed"
+                                        IsSelectionRangeEnabled="True" 
+                                        Minimum="0" TickFrequency="1"
+                                        Maximum="100" IsSnapToTickEnabled="True"
+                                        Value="0" IsMoveToPointEnabled="True"
+                                        Orientation="Vertical" 
+                                        Width="20" Height="100" Margin="10 30 0 0" />
+                            </StackPanel>
+                        </Popup>
+                    </StackPanel>
+                    <Button x:Name="SpeedBtn" Content="1x" Background="Transparent" Click="BT_Click_Speed" Height="20"
+                            BorderBrush="Transparent" Style="{DynamicResource TimeSpeed}"/>
+                </StackPanel>
+            </Border>  
+        </Grid>
+    </Border>
+</Window>
